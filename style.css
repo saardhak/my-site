@@ -9,17 +9,40 @@
     height: 100%;
     font-family: 'Inter', sans-serif;
     scroll-behavior: smooth;
-    overflow: hidden;
+    overflow: hidden; /* → scroll handled by .container */
   }
   
-  /* 2. Scroll-snap container */
+  /* 2. Progress bar */
+  #progress-bar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 4px;
+    background: #ff6b6b;
+    width: 0%;
+    z-index: 100;
+    transition: width 0.1s ease-out;
+  }
+  
+  /* 3. Scroll-snap container */
   .container {
     height: 100vh;
     overflow-y: scroll;
     scroll-snap-type: y mandatory;
   }
   
-  /* 3. Full-screen sections */
+  /* 4. Section reveal animations */
+  .hidden {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  .visible {
+    opacity: 1;
+    transform: translateY(0);
+    transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+  }
+  
+  /* 5. Full-screen sections */
   section {
     scroll-snap-align: start;
     display: flex;
@@ -31,17 +54,24 @@
     text-align: center;
   }
   
-  /* 4. Hero styling */
+  /* 6. Hero & typing cursor */
   .hero {
     background: #f5f5f5;
   }
-  .hero h1 {
+  #hero-text {
     font-size: 6rem;
     font-weight: 700;
     color: #333;
+    white-space: nowrap;
+    overflow: hidden;
+    border-right: .15em solid #333;
+    animation: blink .7s step-end infinite;
+  }
+  @keyframes blink {
+    50% { border-color: transparent; }
   }
   
-  /* 5. Alternate section backgrounds */
+  /* 7. Alternate section backgrounds */
   .section {
     background: #ffffff;
   }
