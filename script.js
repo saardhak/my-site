@@ -1,48 +1,50 @@
-// script.js
-
-// 1. Typing effect for “Saardhak”
 document.addEventListener('DOMContentLoaded', () => {
+    /* 1. HERO NAME TYPING */
+    const heroEl = document.getElementById('hero-text');
     const name = 'Saardhak';
-    const heroText = document.getElementById('hero-text');
-    let idx = 0;
-  
-    function type() {
-      if (idx <= name.length) {
-        heroText.textContent = name.substring(0, idx);
-        idx++;
-        setTimeout(type, 150);
+    let nameIdx = 0;
+    function typeName() {
+      if (nameIdx <= name.length) {
+        heroEl.textContent = name.slice(0, nameIdx++);
+        setTimeout(typeName, 120);
       }
     }
-    type();
-  });
+    typeName();
   
-  // 2. Scroll progress bar
-  const progressBar = document.getElementById('progress-bar');
-  const container = document.querySelector('.container');
-  container.addEventListener('scroll', () => {
-    const scrollTop = container.scrollTop;
-    const scrollHeight = container.scrollHeight - container.clientHeight;
-    const scrolled = (scrollTop / scrollHeight) * 100;
-    progressBar.style.width = scrolled + '%';
-  });
-  
-  // 3. Reveal sections on scroll
-  const sections = document.querySelectorAll('section');
-  const observerOptions = {
-    root: container,
-    threshold: 0.1
-  };
-  const observer = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-      if (entry.isIntersecting) {
-        entry.target.classList.add('visible');
-        observer.unobserve(entry.target);
+    /* 2. SUBTITLE CYCLE & TYPE */
+    const subtitleEl = document.getElementById('subtitle');
+    const subtitles = ['Designer', 'Ideator', 'Entrepreneur', 'Innovator', 'Engineer'];
+    let subIdx = 0, subChar = 0, deleting = false;
+    function cycleSubtitle() {
+      const current = subtitles[subIdx];
+      if (!deleting) {
+        subtitleEl.textContent = current.slice(0, ++subChar);
+        if (subChar === current.length) {
+          deleting = true;
+          setTimeout(cycleSubtitle, 1500);
+          return;
+        }
+      } else {
+        subtitleEl.textContent = current.slice(0, --subChar);
+        if (subChar === 0) {
+          deleting = false;
+          subIdx = (subIdx + 1) % subtitles.length;
+        }
       }
-    });
-  }, observerOptions);
+      setTimeout(cycleSubtitle, deleting ? 60 : 120);
+    }
+    cycleSubtitle();
   
-  sections.forEach(section => {
-    section.classList.add('hidden');
-    observer.observe(section);
+    /* 3. SCROLL → SCALE & FADE HERO */
+    const container = document.querySelector('.container');
+    container.addEventListener('scroll', () => {
+      const scrollY = container.scrollTop;
+      const vh = window.innerHeight;
+      const progress = Math.min(scrollY / vh, 1);
+      const scale = 1 + progress * 0.5;
+      const opacity = Math.max(1 - progress * 1.2, 0);
+      heroEl.style.transform = `scale(${scale})`;
+      heroEl.style.opacity = opacity;
+    });
   });
   
