@@ -9,8 +9,8 @@ import Contact from '@/components/contact';
 const Home = () => {
   return (
     <div className="min-h-screen bg-white">
-      <Navigation />
       <Hero />
+      <Navigation />
       <About />
       <Experience />
       <VeinaProject />
