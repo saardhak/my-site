@@ -1,0 +1,188 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --background: hsl(0, 0%, 100%);
+  --foreground: hsl(20, 14.3%, 4.1%);
+  --muted: hsl(60, 4.8%, 95.9%);
+  --muted-foreground: hsl(25, 5.3%, 44.7%);
+  --popover: hsl(0, 0%, 100%);
+  --popover-foreground: hsl(20, 14.3%, 4.1%);
+  --card: hsl(0, 0%, 100%);
+  --card-foreground: hsl(20, 14.3%, 4.1%);
+  --border: hsl(20, 5.9%, 90%);
+  --input: hsl(20, 5.9%, 90%);
+  --primary: hsl(207, 90%, 54%);
+  --primary-foreground: hsl(211, 100%, 99%);
+  --secondary: hsl(60, 4.8%, 95.9%);
+  --secondary-foreground: hsl(24, 9.8%, 10%);
+  --accent: hsl(60, 4.8%, 95.9%);
+  --accent-foreground: hsl(24, 9.8%, 10%);
+  --destructive: hsl(0, 84.2%, 60.2%);
+  --destructive-foreground: hsl(60, 9.1%, 97.8%);
+  --ring: hsl(20, 14.3%, 4.1%);
+  --radius: 0.5rem;
+  
+  /* Apple-inspired colors */
+  --apple-gray: hsl(218, 5%, 54%);
+  --apple-blue: hsl(207, 100%, 50%);
+  --apple-green: hsl(142, 71%, 45%);
+  --apple-text: hsl(220, 9%, 11%);
+}
+
+.dark {
+  --background: hsl(240, 10%, 3.9%);
+  --foreground: hsl(0, 0%, 98%);
+  --muted: hsl(240, 3.7%, 15.9%);
+  --muted-foreground: hsl(240, 5%, 64.9%);
+  --popover: hsl(240, 10%, 3.9%);
+  --popover-foreground: hsl(0, 0%, 98%);
+  --card: hsl(240, 10%, 3.9%);
+  --card-foreground: hsl(0, 0%, 98%);
+  --border: hsl(240, 3.7%, 15.9%);
+  --input: hsl(240, 3.7%, 15.9%);
+  --primary: hsl(207, 90%, 54%);
+  --primary-foreground: hsl(211, 100%, 99%);
+  --secondary: hsl(240, 3.7%, 15.9%);
+  --secondary-foreground: hsl(0, 0%, 98%);
+  --accent: hsl(240, 3.7%, 15.9%);
+  --accent-foreground: hsl(0, 0%, 98%);
+  --destructive: hsl(0, 62.8%, 30.6%);
+  --destructive-foreground: hsl(0, 0%, 98%);
+  --ring: hsl(240, 4.9%, 83.9%);
+  --radius: 0.5rem;
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply font-sans antialiased bg-background text-foreground;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  }
+  
+  html {
+    scroll-behavior: smooth;
+  }
+}
+
+@layer utilities {
+  .reveal {
+    opacity: 0;
+    transform: translateY(60px);
+    transition: all 1.2s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  
+  .reveal.active {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  
+  .reveal-fast {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  
+  .reveal-fast.active {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  
+  .parallax-scroll {
+    transform: translateY(0);
+    transition: transform 0.3s ease-out;
+  }
+  
+  .apple-blur {
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+  }
+  
+  .section-transition {
+    opacity: 0;
+    transform: translateY(100px) scale(0.98);
+    transition: all 1.4s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  
+  .section-transition.active {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+  
+  .hero-name-shrink {
+    transform-origin: center;
+    transition: all 1s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  
+  .hero-name-mini {
+    transform-origin: top left;
+    transition: all 3s cubic-bezier(0.16, 1, 0.3, 1);
+    position: fixed !important;
+    top: 16px !important;   /* match nav’s vertical padding */
+    left: 24px !important; /* match nav’s horizontal padding */
+    transform: scale(0.2); /* just shrink, no translate */
+    z-index: 60;
+    opacity: 1;            /* keep visible */
+    pointer-events: auto;
+  }
+
+  
+  .button-hover {
+    position: relative;
+    overflow: hidden;
+    transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  
+  .button-hover::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+    transition: left 0.5s ease;
+  }
+  
+  .button-hover:hover::before {
+    left: 100%;
+  }
+  
+  .button-hover:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+  }
+  
+  .nav-button {
+    position: relative;
+    transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  
+  .nav-button::after {
+    content: '';
+    position: absolute;
+    bottom: -4px;
+    left: 50%;
+    width: 0;
+    height: 2px;
+    background: var(--primary);
+    transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    transform: translateX(-50%);
+  }
+  
+  .nav-button:hover::after {
+    width: 100%;
+  }
+  
+  .cursor-magnetic {
+    cursor: none;
+  }
+  
+  .magnetic-button {
+    transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+}
