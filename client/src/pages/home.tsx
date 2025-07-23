@@ -9,14 +9,14 @@ import Contact from '@/components/contact';
 const Home = () => {
   return (
     <div className="min-h-screen bg-white">
-      <Hero />
-      <Navigation />
+      <Hero>
+        <Navigation />
+      </Hero>
       <About />
       <Experience />
       <VeinaProject />
       <PastProjects />
       <Contact />
-      
       {/* Footer */}
       <footer className="py-8 px-6 border-t border-gray-200">
         <div className="max-w-6xl mx-auto flex flex-col md:flex-row justify-between items-center">

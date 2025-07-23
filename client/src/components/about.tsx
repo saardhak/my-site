@@ -1,5 +1,6 @@
 import { useScrollAnimation } from '@/hooks/use-scroll-animation';
 import { useSectionAnimation } from '@/hooks/use-section-animation';
+import headshot from '../assets/headshot.jpeg';
 
 const About = () => {
   const sectionRef = useSectionAnimation();
@@ -32,10 +33,9 @@ const About = () => {
               </p>
             </div>
           </div>
-          
           <div ref={imageRef} className="reveal">
             <img 
-              src="https://images.unsplash.com/photo-1559757148-5c350d0d3c56?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=1000" 
+              src={headshot} 
               alt="Professional medical device engineer in laboratory setting" 
               className="rounded-2xl shadow-2xl w-full h-auto"
             />
