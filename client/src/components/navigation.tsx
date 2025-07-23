@@ -3,14 +3,11 @@ import { Menu, X } from 'lucide-react';
 import TypingAnimation from './typing-animation';
 import { heroScrollState } from './hero';
 
-const LEFT_NAV = [
-  { label: 'About', id: 'about' },
-  { label: 'Experience', id: 'experience' },
-];
-const RIGHT_NAV = [
-  { label: 'Veina', id: 'veina' },
-  { label: 'Projects', id: 'projects' },
-  { label: 'Contact', id: 'contact' },
+const NAV_SECTIONS = [
+  { label: 'About Me', id: 'about' },
+  { label: 'My Startup', id: 'startup' },
+  { label: 'Portfolio', id: 'portfolio' },
+  { label: `Let's Connect`, id: 'contact' },
 ];
 
 // Track if hero text is pinned (cut off or fully hidden)
@@ -107,9 +104,9 @@ const Navigation = () => {
         className={`w-full max-w-6xl mx-auto px-6 py-4 apple-blur border-b border-gray-100 dark:border-gray-700 transition-all duration-300`}
       >
         <div className="flex items-center justify-center w-full">
-          {/* Left nav */}
+          {/* Left nav: first two sections */}
           <div className="flex space-x-8 flex-1 justify-end">
-            {LEFT_NAV.map((item) => (
+            {NAV_SECTIONS.slice(0, 2).map((item) => (
               <button
                 key={item.id}
                 onClick={() => scrollToSection(item.id)}
@@ -122,8 +119,9 @@ const Navigation = () => {
           {/* Center Saardhak and subtitle */}
           <div className="flex flex-col items-center flex-shrink-0 mx-8 select-none">
             <span
-              className="font-bold text-apple-text dark:text-white text-lg md:text-2xl"
+              className="font-bold text-apple-text dark:text-white text-lg md:text-2xl cursor-pointer"
               style={{ transition: 'font-size 0.2s' }}
+              onClick={() => scrollToSection('home')}
             >
               Saardhak
             </span>
@@ -138,9 +136,9 @@ const Navigation = () => {
               </span>
             </span>
           </div>
-          {/* Right nav */}
+          {/* Right nav: last two sections */}
           <div className="flex space-x-8 flex-1 justify-start">
-            {RIGHT_NAV.map((item) => (
+            {NAV_SECTIONS.slice(2).map((item) => (
               <button
                 key={item.id}
                 onClick={() => scrollToSection(item.id)}
@@ -164,7 +162,7 @@ const Navigation = () => {
         {isMobileMenuOpen && (
           <div className="md:hidden mt-4 pb-4 border-t border-gray-100">
             <div className="flex flex-col space-y-3 mt-4">
-              {[...LEFT_NAV, ...RIGHT_NAV].map((item) => (
+              {NAV_SECTIONS.map((item) => (
                 <button
                   key={item.id}
                   onClick={() => scrollToSection(item.id)}

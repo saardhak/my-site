@@ -1,7 +1,6 @@
 import Navigation from '@/components/navigation';
 import Hero, { FlipContext } from '@/components/hero';
 import About from '@/components/about';
-import Experience from '@/components/experience';
 import VeinaProject from '@/components/veina-project';
 import PastProjects from '@/components/past-projects';
 import Contact from '@/components/contact';
@@ -21,7 +20,6 @@ const Home = ({ onFlipChange, ballTheme }: { onFlipChange?: (flipped: boolean) =
         <Navigation />
       </Hero>
       <About />
-      <Experience />
       <VeinaProject />
       <PastProjects />
       <Contact />

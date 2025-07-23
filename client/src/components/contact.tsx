@@ -20,7 +20,7 @@ const Contact = () => {
         
         <div ref={subtitleRef} className="reveal">
           <p className="text-xl opacity-80 mb-12 max-w-2xl mx-auto leading-relaxed">
-            Interested in collaborating on the next breakthrough in medical device innovation? I'd love to hear about your challenges and explore solutions together.
+            Let’s connect! I’m always open to new opportunities, collaborations, and conversations about healthcare, technology, and entrepreneurship. Reach out to start a conversation or just say hello.
           </p>
         </div>
         
