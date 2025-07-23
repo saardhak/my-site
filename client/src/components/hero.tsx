@@ -3,7 +3,16 @@ import TypingAnimation from './typing-animation';
 import { setHeroPinned } from './navigation';
 import { SubtitleContext } from './navigation';
 
-const DOT_COLORS = ['#ff3b3b', '#00d26a', '#3b7bff', '#ffe14d'];
+// Use brighter pastel colors for doodlers
+const DOT_COLORS = [
+  '#ffb3c6', // bright pastel pink
+  '#a7ffeb', // bright pastel mint
+  '#bdb2ff', // bright pastel lavender
+  '#fff5ba', // bright pastel yellow
+  '#ffd6a5', // bright pastel peach
+  '#a0c4ff', // bright pastel blue
+  '#caffbf', // bright pastel green
+];
 const DOTS_PER_COLOR = 3;
 const DOT_COUNT = 10; // Up to 10 doodlers
 const TRAIL_DURATION = 3000; // ms
@@ -34,7 +43,43 @@ export let heroScrollState: HeroScrollState = { progress: 0, snapped: false, fon
 
 export const FlipContext = createContext<{ flipped: boolean }>({ flipped: false });
 
-const Hero = ({ children, onFlipChange }: { children?: React.ReactNode; onFlipChange?: (flipped: boolean) => void }) => {
+const BALL_THEMES: Record<string, (string | {emoji: string, color: string})[]> = {
+  pastel: [
+    '#ffb3c6', '#a7ffeb', '#bdb2ff', '#fff5ba', '#ffd6a5', '#a0c4ff', '#caffbf',
+  ],
+  original: [
+    '#ff3b3b', '#00d26a', '#3b7bff', '#ffe14d',
+  ],
+  neon: [
+    '#ff00ff', '#39ff14', '#00ffff', '#ffff00', '#ff073a', '#00bfff', '#fffb00',
+  ],
+  sports: [
+    {emoji: '🏀', color: '#ff9800'}, // basketball
+    {emoji: '⚽', color: '#222'},    // soccer
+    {emoji: '🏈', color: '#795548'}, // football
+    {emoji: '🎾', color: '#b2ff59'}, // tennis
+    {emoji: '🏏', color: '#388e3c'}, // cricket
+  ],
+  holiday: [
+    {emoji: '🎄', color: '#388e3c'}, // Christmas tree
+    {emoji: '🎅', color: '#e53935'}, // Santa
+    {emoji: '⛄', color: '#b3e5fc'}, // Snowman
+    {emoji: '🎁', color: '#e91e63'}, // Gift
+    {emoji: '❄️', color: '#81d4fa'}, // Snowflake
+    {emoji: '🦌', color: '#a1887f'}, // Reindeer
+    {emoji: '🔔', color: '#ffd700'}, // Bell
+  ],
+  emoji: [
+    {emoji: '☺️', color: '#ffd700'},
+    {emoji: '🥳', color: '#ffb300'},
+    {emoji: '😝', color: '#e91e63'},
+    {emoji: '😅', color: '#81d4fa'},
+    {emoji: '😍', color: '#ba68c8'},
+    {emoji: '😎', color: '#00bcd4'},
+  ],
+};
+
+const Hero = ({ children, onFlipChange, ballTheme }: { children?: React.ReactNode; onFlipChange?: (flipped: boolean) => void; ballTheme?: string }) => {
   const [scrollY, setScrollY] = useState(0);
   const [isVisible, setIsVisible] = useState(true);
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -159,9 +204,12 @@ const Hero = ({ children, onFlipChange }: { children?: React.ReactNode; onFlipCh
 
     // Dot state
     const now = () => performance.now();
+    // In the doodler logic, use the selected theme
+    const theme = ballTheme && BALL_THEMES[ballTheme] ? ballTheme : 'pastel';
+    const colorSet = BALL_THEMES[theme];
     // Build a color pool with max 3 of each color, shuffled
-    let colorPool: string[] = [];
-    for (const color of DOT_COLORS) {
+    let colorPool: (string | {emoji: string, color: string})[] = [];
+    for (const color of colorSet) {
       for (let i = 0; i < DOTS_PER_COLOR; i++) {
         colorPool.push(color);
       }
@@ -290,7 +338,8 @@ const Hero = ({ children, onFlipChange }: { children?: React.ReactNode; onFlipCh
           const age = tNow - p2.t;
           let alpha = 1 - age / TRAIL_DURATION;
           if (alpha < 0) alpha = 0;
-          ctx.strokeStyle = dot.color;
+          let trailColor = typeof dot.color === 'string' ? dot.color : dot.color.color;
+          ctx.strokeStyle = trailColor;
           ctx.globalAlpha = alpha * 0.7;
           ctx.lineWidth = dot.radius * 1.2;
           ctx.beginPath();
@@ -300,13 +349,22 @@ const Hero = ({ children, onFlipChange }: { children?: React.ReactNode; onFlipCh
         }
         ctx.globalAlpha = 1;
         // Draw dot
-        ctx.beginPath();
-        ctx.arc(dot.x, dot.y, dot.radius, 0, 2 * Math.PI);
-        ctx.fillStyle = dot.color;
-        ctx.shadowColor = dot.color;
-        ctx.shadowBlur = 12;
-        ctx.fill();
-        ctx.shadowBlur = 0;
+        if (typeof dot.color === 'string') {
+          ctx.beginPath();
+          ctx.arc(dot.x, dot.y, dot.radius, 0, 2 * Math.PI);
+          ctx.fillStyle = dot.color;
+          ctx.shadowColor = dot.color;
+          ctx.shadowBlur = 12;
+          ctx.fill();
+          ctx.shadowBlur = 0;
+        } else {
+          // Draw emoji
+          const emoji = dot.color as {emoji: string, color: string};
+          ctx.font = `${dot.radius * 2}px Arial`;
+          ctx.textAlign = 'center';
+          ctx.textBaseline = 'middle';
+          ctx.fillText(emoji.emoji, dot.x, dot.y);
+        }
       }
       animationId = requestAnimationFrame(animate);
     }
@@ -315,7 +373,7 @@ const Hero = ({ children, onFlipChange }: { children?: React.ReactNode; onFlipCh
       window.removeEventListener('resize', handleResize);
       cancelAnimationFrame(animationId);
     };
-  }, [isVisible]);
+  }, [isVisible, ballTheme]);
 
   // --- SCALE WITH HERO VISIBILITY LOGIC (RAF, no lag, no forced re-render) ---
   const minFont = 32; // Nav bar size
@@ -533,10 +591,10 @@ const Hero = ({ children, onFlipChange }: { children?: React.ReactNode; onFlipCh
                   {cursor && <span className="animate-pulse">|</span>}
                 </span>
               </div>
-            </div>
-          </div>
+        </div>
+      </div>
           {children}
-      </section>
+    </section>
       </SubtitleContext.Provider>
     </FlipContext.Provider>
   );

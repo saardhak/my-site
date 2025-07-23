@@ -4,21 +4,23 @@ import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import Home from "@/pages/home";
 import React, { useEffect, useState, useCallback } from 'react';
-import SecretPage from "@/components/secret-page";
-import SecretHeroClock from "@/components/secret-hero-clock";
+import SecretDashboard from "@/components/secret-dashboard";
 
 function App() {
-  const [showSecret, setShowSecret] = useState(false);
-  const [showClock, setShowClock] = useState(false);
+  const [showDashboard, setShowDashboard] = useState(false);
   const [isBhrugubanda, setIsBhrugubanda] = useState(false);
   const [darkMode, setDarkMode] = useState(false);
+  const [showBanner, setShowBanner] = useState(false);
+  const [ballTheme, setBallTheme] = useState('pastel');
 
   // Handler to detect overscroll at top
   const handleWheel = useCallback((e: WheelEvent) => {
-    if (window.scrollY === 0 && e.deltaY < 0 && !showSecret && isBhrugubanda) {
-      setShowSecret(true);
+    if (window.scrollY === 0 && e.deltaY < 0 && !showDashboard && isBhrugubanda) {
+      setShowDashboard(true);
+      setShowBanner(true);
+      setTimeout(() => setShowBanner(false), 3000);
     }
-  }, [showSecret, isBhrugubanda]);
+  }, [showDashboard, isBhrugubanda]);
 
   // Touch overscroll detection
   useEffect(() => {
@@ -29,8 +31,10 @@ function App() {
       atTop = window.scrollY === 0;
     }
     function onTouchMove(e: TouchEvent) {
-      if (atTop && e.touches[0].clientY - startY > 30 && !showSecret && isBhrugubanda) {
-        setShowSecret(true);
+      if (atTop && e.touches[0].clientY - startY > 30 && !showDashboard && isBhrugubanda) {
+        setShowDashboard(true);
+        setShowBanner(true);
+        setTimeout(() => setShowBanner(false), 3000);
       }
     }
     window.addEventListener('wheel', handleWheel, { passive: true });
@@ -41,20 +45,19 @@ function App() {
       window.removeEventListener('touchstart', onTouchStart);
       window.removeEventListener('touchmove', onTouchMove);
     };
-  }, [handleWheel, showSecret, isBhrugubanda]);
+  }, [handleWheel, showDashboard, isBhrugubanda]);
 
-  // Hide secret page on scroll down
+  // Hide dashboard on scroll down
   useEffect(() => {
-    if (!showSecret && !showClock) return;
+    if (!showDashboard) return;
     function onScroll() {
       if (window.scrollY > 0) {
-        setShowSecret(false);
-        setShowClock(false);
+        setShowDashboard(false);
       }
     }
     window.addEventListener('scroll', onScroll);
     return () => window.removeEventListener('scroll', onScroll);
-  }, [showSecret, showClock]);
+  }, [showDashboard]);
 
   // Dark mode effect
   useEffect(() => {
@@ -65,13 +68,8 @@ function App() {
     }
   }, [darkMode]);
 
-  const handleShowClock = () => {
-    setShowSecret(false);
-    setShowClock(true);
-  };
-  const handleBackFromClock = () => {
-    setShowClock(false);
-    setShowSecret(true);
+  const handleBackFromDashboard = () => {
+    setShowDashboard(false);
   };
   const handleToggleDarkMode = () => setDarkMode(d => !d);
 
@@ -79,9 +77,8 @@ function App() {
     <QueryClientProvider client={queryClient}>
       <TooltipProvider>
         <Toaster />
-        {showSecret && <SecretPage onClose={() => setShowSecret(false)} onShowClock={handleShowClock} darkMode={darkMode} onToggleDarkMode={handleToggleDarkMode} />}
-        {showClock && <SecretHeroClock onBack={handleBackFromClock} />}
-        <Home onFlipChange={setIsBhrugubanda} />
+        {showDashboard && <SecretDashboard onBack={handleBackFromDashboard} darkMode={darkMode} onToggleDarkMode={handleToggleDarkMode} showBanner={showBanner} ballTheme={ballTheme} onThemeChange={setBallTheme} />}
+        <Home onFlipChange={setIsBhrugubanda} ballTheme={ballTheme} />
       </TooltipProvider>
     </QueryClientProvider>
   );

@@ -129,7 +129,7 @@ const Navigation = () => {
             </span>
             <span
               className="font-light text-apple-gray dark:text-gray-300 text-xs md:text-base mt-0.5"
-              style={{ transition: 'font-size 0.2s' }}
+              style={{ transition: 'font-size 0.2s', minHeight: '1.5em', display: 'inline-block' }}
             >
               {/* Synchronized subtitle */}
               <span className="relative">

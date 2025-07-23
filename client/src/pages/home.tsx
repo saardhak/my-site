@@ -9,7 +9,7 @@ import React, { useState } from 'react';
 
 export { FlipContext };
 
-const Home = ({ onFlipChange }: { onFlipChange?: (flipped: boolean) => void }) => {
+const Home = ({ onFlipChange, ballTheme }: { onFlipChange?: (flipped: boolean) => void; ballTheme?: string }) => {
   const [flipped, setFlipped] = useState(false);
   const handleFlipChange = (f: boolean) => {
     setFlipped(f);
@@ -17,7 +17,7 @@ const Home = ({ onFlipChange }: { onFlipChange?: (flipped: boolean) => void }) =
   };
   return (
     <div className="min-h-screen bg-background text-foreground dark:bg-neutral-900 dark:text-white">
-      <Hero onFlipChange={handleFlipChange}>
+      <Hero onFlipChange={handleFlipChange} ballTheme={ballTheme}>
         <Navigation />
       </Hero>
       <About />
