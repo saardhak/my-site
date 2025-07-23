@@ -321,6 +321,15 @@ const Hero = ({ children }: { children?: React.ReactNode }) => {
   const minSubtitleFont = 18; // Nav bar subtitle size
   const maxSubtitleFont = 48; // px
 
+  // Find the tallest subtitle for fixed height
+  const subtitleWords = ['Designer', 'Ideator', 'Entrepreneur', 'Innovator', 'Engineer'];
+  const maxSubtitleLength = Math.max(...subtitleWords.map(w => w.length));
+  // Estimate tallest subtitle (in px) for current font size
+  function getSubtitleHeight(fontSize: number) {
+    // 1.2em line height, fudge factor for descenders
+    return fontSize * 1.2;
+  }
+
   useEffect(() => {
     let lastSnapped = false;
     let running = true;
@@ -338,6 +347,8 @@ const Hero = ({ children }: { children?: React.ReactNode }) => {
       if (heroVisible < heroFull) {
         scaleProgress = clamp(heroVisible / heroFull, 0, 1);
       }
+      // Quadratic scaling for smooth transition
+      const quadScale = scaleProgress * scaleProgress;
       // Nav bar constants
       const navBarFontSize = 32;
       const navBarSubtitleFontSize = 18;
@@ -346,21 +357,35 @@ const Hero = ({ children }: { children?: React.ReactNode }) => {
       let fontSize, subtitleFontSize, centerY;
       const blockMargin = 8;
       if (scaleProgress <= 0.2) {
-        fontSize = navBarFontSize;
-        subtitleFontSize = navBarSubtitleFontSize;
+        fontSize = navBarFontSize * quadScale / (0.2 * 0.2); // allow to shrink below nav bar size
+        subtitleFontSize = navBarSubtitleFontSize * quadScale / (0.2 * 0.2);
         centerY = navBarY;
         setHeroPinned(true);
       } else {
-        fontSize = minFont + (maxFont - minFont) * scaleProgress;
-        subtitleFontSize = minSubtitleFont + (maxSubtitleFont - minSubtitleFont) * scaleProgress;
+        fontSize = minFont + (maxFont - minFont) * quadScale;
+        subtitleFontSize = minSubtitleFont + (maxSubtitleFont - minSubtitleFont) * quadScale;
         const blockHeight = fontSize + subtitleFontSize + blockMargin;
         let idealCenter = heroTop + heroVisible / 2;
         let minCenter = heroTop + blockHeight / 2;
         let maxCenter = heroTop + heroVisible - blockHeight / 2;
         let tempCenterY = Math.max(minCenter, Math.min(idealCenter, maxCenter));
         centerY = tempCenterY;
-        // Show nav bar only when text size is less than or equal to nav bar text size
+        // Show nav bar if block's bottom is at or above nav bar's top, with overlap threshold
+        const blockBottom = centerY + blockHeight / 2;
         setHeroPinned(fontSize <= navBarFontSize);
+      }
+      // Dynamically reduce margin between Saardhak and subtitle as it shrinks
+      const maxMargin = 16; // px
+      const minMargin = 2; // px
+      const margin = minMargin + (maxMargin - minMargin) * quadScale;
+      if (typingRef.current) {
+        typingRef.current.style.marginTop = `${margin}px`;
+        typingRef.current.style.fontSize = subtitleFontSize + 'px';
+        typingRef.current.style.fontWeight = scaleProgress <= 0.2 ? '400' : '';
+        typingRef.current.style.height = getSubtitleHeight(subtitleFontSize) + 'px';
+        typingRef.current.style.display = 'flex';
+        typingRef.current.style.alignItems = 'center';
+        typingRef.current.style.justifyContent = 'center';
       }
       // Update block style directly
       if (blockRef.current) {
@@ -370,11 +395,6 @@ const Hero = ({ children }: { children?: React.ReactNode }) => {
         blockRef.current.style.transform = 'translate(-50%, -50%)';
         blockRef.current.style.fontWeight = scaleProgress <= 0.2 ? 'bold' : '';
         blockRef.current.style.textAlign = 'center';
-      }
-      if (typingRef.current) {
-        typingRef.current.style.fontSize = subtitleFontSize + 'px';
-        typingRef.current.style.fontWeight = scaleProgress <= 0.2 ? '400' : '';
-        typingRef.current.style.marginTop = scaleProgress <= 0.2 ? '0.125rem' : '';
       }
       // Update nav state for external use
       heroScrollState.progress = 1 - scaleProgress;
@@ -393,18 +413,6 @@ const Hero = ({ children }: { children?: React.ReactNode }) => {
     return () => {
       running = false;
     };
-  }, []);
-
-  // Track nav bar visibility for subtitle opacity
-  const [navActive, setNavActive] = useState(false);
-  useEffect(() => {
-    let running = true;
-    function checkNav() {
-      setNavActive(heroScrollState.snapped);
-      if (running) requestAnimationFrame(checkNav);
-    }
-    checkNav();
-    return () => { running = false; };
   }, []);
 
   return (
@@ -434,17 +442,14 @@ const Hero = ({ children }: { children?: React.ReactNode }) => {
             <h1
               ref={textRef}
               className={`font-bold tracking-tight mb-2 leading-tight text-apple-text`}
-            >
-              Saardhak
-            </h1>
+        >
+          Saardhak
+        </h1>
             <div
               ref={typingRef}
-              style={{
-                opacity: navActive ? 0 : 1,
-                transition: 'opacity 0.2s',
-                fontSize: heroScrollState.subtitleFontSize + 'px',
-              }}
-              className={`font-light text-apple-gray transition-opacity duration-1000`}
+              className={`font-light text-apple-gray transition-opacity duration-1000 ${
+                isVisible ? 'opacity-100' : 'opacity-0'
+              }`}
             >
               {/* Synchronized subtitle */}
               <span className="relative">

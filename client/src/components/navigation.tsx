@@ -33,8 +33,7 @@ const Navigation = () => {
     let running = true;
     function checkNav() {
       // Hide nav bar if hero text is bigger than nav bar text size
-      const navBarFontSize = 32;
-      if (heroScrollState.fontSize > navBarFontSize) {
+      if (heroScrollState.fontSize > 28) {
         setShowNav(false);
         setIsFixed(false);
       } else {
