@@ -38,7 +38,7 @@ const Experience = () => {
   ];
 
   return (
-    <section ref={sectionRef} id="experience" className="py-32 px-6 bg-gray-50 section-transition">
+    <section ref={sectionRef} id="experience" className="py-32 px-6 bg-background dark:bg-neutral-900 section-transition">
       <div className="max-w-6xl mx-auto">
         <div className="text-center mb-20">
           <div ref={titleRef} className="reveal">
@@ -62,7 +62,7 @@ const Experience = () => {
               ref={index === 0 ? exp1Ref : index === 1 ? exp2Ref : exp3Ref}
               className="reveal"
             >
-              <div className="bg-white rounded-3xl p-8 md:p-12 shadow-lg hover:shadow-xl transition-all duration-500 button-hover">
+              <div className="bg-background dark:bg-neutral-800 rounded-3xl p-8 md:p-12 shadow-lg hover:shadow-xl transition-all duration-500 button-hover text-foreground dark:text-white">
                 <div className="grid md:grid-cols-3 gap-8">
                   <div className="md:col-span-1">
                     <h3 className="text-2xl font-medium text-apple-text mb-4">{exp.title}</h3>
