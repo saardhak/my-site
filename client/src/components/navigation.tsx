@@ -74,7 +74,7 @@ const Navigation = () => {
     top: isFixed ? 0 : 'auto',
     zIndex: 50,
     transition: 'all 0.3s cubic-bezier(0.4,0,0.2,1)',
-    background: 'rgba(255,255,255,0.9)',
+    background: document.body.classList.contains('dark') ? 'rgba(23,23,23,0.96)' : 'rgba(255,255,255,0.9)',
     boxShadow: isFixed ? '0 2px 8px rgba(0,0,0,0.04)' : 'none',
     opacity: showNav ? 1 : 0,
     pointerEvents: showNav ? 'auto' : 'none',
@@ -104,7 +104,7 @@ const Navigation = () => {
       <nav
         ref={navRef}
         style={navStyle}
-        className={`w-full max-w-6xl mx-auto px-6 py-4 apple-blur border-b border-gray-100 transition-all duration-300`}
+        className={`w-full max-w-6xl mx-auto px-6 py-4 apple-blur border-b border-gray-100 dark:border-gray-700 transition-all duration-300`}
       >
         <div className="flex items-center justify-center w-full">
           {/* Left nav */}
@@ -113,7 +113,7 @@ const Navigation = () => {
               <button
                 key={item.id}
                 onClick={() => scrollToSection(item.id)}
-                className="nav-button text-apple-gray hover:text-apple-text font-medium"
+                className="nav-button text-apple-gray dark:text-gray-300 hover:text-apple-text dark:hover:text-white font-medium"
               >
                 {item.label}
               </button>
@@ -122,13 +122,13 @@ const Navigation = () => {
           {/* Center Saardhak and subtitle */}
           <div className="flex flex-col items-center flex-shrink-0 mx-8 select-none">
             <span
-              className="font-bold text-apple-text text-lg md:text-2xl"
+              className="font-bold text-apple-text dark:text-white text-lg md:text-2xl"
               style={{ transition: 'font-size 0.2s' }}
             >
               Saardhak
             </span>
             <span
-              className="font-light text-apple-gray text-xs md:text-base mt-0.5"
+              className="font-light text-apple-gray dark:text-gray-300 text-xs md:text-base mt-0.5"
               style={{ transition: 'font-size 0.2s' }}
             >
               {/* Synchronized subtitle */}
@@ -144,7 +144,7 @@ const Navigation = () => {
               <button
                 key={item.id}
                 onClick={() => scrollToSection(item.id)}
-                className="nav-button text-apple-gray hover:text-apple-text font-medium"
+                className="nav-button text-apple-gray dark:text-gray-300 hover:text-apple-text dark:hover:text-white font-medium"
               >
                 {item.label}
               </button>

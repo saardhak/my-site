@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef, useReducer } from 'react';
+import React, { createContext, useContext, useRef, useState, useEffect, useReducer } from 'react';
 import TypingAnimation from './typing-animation';
 import { setHeroPinned } from './navigation';
 import { SubtitleContext } from './navigation';
@@ -32,7 +32,9 @@ export type HeroScrollState = {
 };
 export let heroScrollState: HeroScrollState = { progress: 0, snapped: false, fontSize: 32, subtitleFontSize: 18, translateY: 0 };
 
-const Hero = ({ children }: { children?: React.ReactNode }) => {
+export const FlipContext = createContext<{ flipped: boolean }>({ flipped: false });
+
+const Hero = ({ children, onFlipChange }: { children?: React.ReactNode; onFlipChange?: (flipped: boolean) => void }) => {
   const [scrollY, setScrollY] = useState(0);
   const [isVisible, setIsVisible] = useState(true);
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -449,88 +451,94 @@ const Hero = ({ children }: { children?: React.ReactNode }) => {
   // Use ch units for minWidth
   const flipMinWidth = `${maxFlipLength + 1}ch`;
 
+  // Notify parent when flipped changes
+  useEffect(() => {
+    if (onFlipChange) onFlipChange(flipped);
+  }, [flipped, onFlipChange]);
+
   return (
-    <SubtitleContext.Provider value={{ currentText, cursor }}>
-      <section ref={sectionRef} id="home" className="min-h-screen flex flex-col items-center justify-center px-6 relative overflow-hidden">
-        {/* Canvas overlay for animated dots */}
-        <canvas
-          ref={canvasRef}
-          className="absolute inset-0 w-full h-full pointer-events-none z-10"
-          style={{ display: 'block' }}
-        />
-        {/* Background content that scrolls up */}
-        <div
-          className="absolute inset-0 w-full h-full z-0"
-          style={{
-            background: '#fff',
-            transform: `translateY(-${scrollY}px)`,
-            transition: 'background 0.2s',
-          }}
-        />
-        {/* Saardhak and subtitle centered in visible hero area, scale with hero visibility */}
-        <div className="max-w-4xl mx-auto text-center relative z-20 flex flex-col items-center justify-center min-h-screen">
+    <FlipContext.Provider value={{ flipped }}>
+      <SubtitleContext.Provider value={{ currentText, cursor }}>
+        <section ref={sectionRef} id="home" className="min-h-screen flex flex-col items-center justify-center px-6 relative overflow-hidden bg-background text-foreground dark:bg-neutral-900 dark:text-white">
+          {/* Canvas overlay for animated dots */}
+          <canvas
+            ref={canvasRef}
+            className="absolute inset-0 w-full h-full pointer-events-none z-10"
+            style={{ display: 'block' }}
+          />
+          {/* Background content that scrolls up */}
           <div
-            ref={blockRef}
-            style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', position: 'fixed', zIndex: 30 }}
-          >
-            <span
-              onClick={handleFlip}
-              style={{
-                display: 'inline-block',
-                cursor: 'pointer',
-                perspective: '600px',
-                marginBottom: '0.5rem',
-                minWidth: flipMinWidth,
-                textAlign: 'center',
-              }}
+            className="absolute inset-0 w-full h-full z-0 bg-background dark:bg-neutral-900"
+            style={{
+              transform: `translateY(-${scrollY}px)`,
+              transition: 'background 0.2s',
+            }}
+          />
+          {/* Saardhak and subtitle centered in visible hero area, scale with hero visibility */}
+          <div className="max-w-4xl mx-auto text-center relative z-20 flex flex-col items-center justify-center min-h-screen">
+            <div
+              ref={blockRef}
+              style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', position: 'fixed', zIndex: 30 }}
             >
               <span
+                onClick={handleFlip}
                 style={{
                   display: 'inline-block',
-                  transition: 'transform 0.5s cubic-bezier(0.4,0,0.2,1)',
-                  transformStyle: 'preserve-3d',
-                  transform: `rotateY(${flipCount * 180}deg)`,
-                  width: '100%',
+                  cursor: 'pointer',
+                  perspective: '600px',
+                  marginBottom: '0.5rem',
+                  minWidth: flipMinWidth,
                   textAlign: 'center',
                 }}
-                className={`font-bold tracking-tight leading-tight text-apple-text`}
               >
-                <span style={{ backfaceVisibility: 'hidden', display: 'inline-block', width: '100%', textAlign: 'center' }}>
-                  Saardhak
-                </span>
                 <span
                   style={{
-                    position: 'absolute',
-                    left: 0,
-                    top: 0,
-                    backfaceVisibility: 'hidden',
-                    transform: 'rotateY(180deg)',
                     display: 'inline-block',
+                    transition: 'transform 0.5s cubic-bezier(0.4,0,0.2,1)',
+                    transformStyle: 'preserve-3d',
+                    transform: `rotateY(${flipCount * 180}deg)`,
                     width: '100%',
                     textAlign: 'center',
                   }}
+                  className={`font-bold tracking-tight leading-tight text-apple-text`}
                 >
-                  Bhrugubanda
+                  <span style={{ backfaceVisibility: 'hidden', display: 'inline-block', width: '100%', textAlign: 'center' }}>
+                    Saardhak
+                  </span>
+                  <span
+                    style={{
+                      position: 'absolute',
+                      left: 0,
+                      top: 0,
+                      backfaceVisibility: 'hidden',
+                      transform: 'rotateY(180deg)',
+                      display: 'inline-block',
+                      width: '100%',
+                      textAlign: 'center',
+                    }}
+                  >
+                    Bhrugubanda
+                  </span>
                 </span>
               </span>
-            </span>
-            <div
-              ref={typingRef}
-              className={`font-light text-apple-gray transition-opacity duration-1000 ${
-                isVisible ? 'opacity-100' : 'opacity-0'
-              }`}
-            >
-              {/* Synchronized subtitle */}
-              <span className="relative">
-                {currentText}
-                {cursor && <span className="animate-pulse">|</span>}
-              </span>
+              <div
+                ref={typingRef}
+                className={`font-light text-apple-gray transition-opacity duration-1000 ${
+                  isVisible ? 'opacity-100' : 'opacity-0'
+                }`}
+              >
+                {/* Synchronized subtitle */}
+                <span className="relative">
+                  {currentText}
+                  {cursor && <span className="animate-pulse">|</span>}
+                </span>
+              </div>
             </div>
           </div>
-        </div>
-        {children}
-    </section>
-    </SubtitleContext.Provider>
+          {children}
+      </section>
+      </SubtitleContext.Provider>
+    </FlipContext.Provider>
   );
 };
 

@@ -9,7 +9,7 @@ const Contact = () => {
   const ctaRef = useScrollAnimation();
 
   return (
-    <section ref={sectionRef} id="contact" className="py-32 px-6 bg-apple-text text-white section-transition">
+    <section ref={sectionRef} id="contact" className="py-32 px-6 bg-background dark:bg-neutral-900 text-foreground dark:text-white section-transition">
       <div className="max-w-4xl mx-auto text-center">
         <div ref={titleRef} className="reveal">
           <h2 className="text-5xl md:text-6xl font-extralight mb-8 leading-tight">
@@ -28,7 +28,7 @@ const Contact = () => {
           <div className="flex flex-col sm:flex-row gap-6 justify-center">
             <a 
               href="mailto:hello@saardhak.com" 
-              className="inline-flex items-center bg-white text-apple-text px-8 py-4 rounded-full text-lg font-medium button-hover"
+              className="inline-flex items-center bg-background dark:bg-neutral-800 text-foreground dark:text-white px-8 py-4 rounded-full text-lg font-medium button-hover hover:bg-background dark:hover:bg-neutral-700 hover:text-foreground dark:hover:text-white"
             >
               <Mail className="w-5 h-5 mr-3" />
               Email Me
