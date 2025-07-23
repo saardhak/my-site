@@ -13,32 +13,29 @@ const Contact = () => {
       <div className="max-w-4xl mx-auto text-center">
         <div ref={titleRef} className="reveal">
           <h2 className="text-5xl md:text-6xl font-extralight mb-8 leading-tight">
-            Let's Connect<br/>
-            <span className="font-medium">& Create</span>
+            Let's Connect
           </h2>
         </div>
-        
         <div ref={subtitleRef} className="reveal">
           <p className="text-xl opacity-80 mb-12 max-w-2xl mx-auto leading-relaxed">
-            Let’s connect! I’m always open to new opportunities, collaborations, and conversations about healthcare, technology, and entrepreneurship. Reach out to start a conversation or just say hello.
+            I’m always open to new opportunities, collaborations, and conversations about healthcare, technology, and entrepreneurship. Reach out to start a conversation or just say hello.
           </p>
         </div>
-        
         <div ref={ctaRef} className="reveal">
-          <div className="flex flex-col sm:flex-row gap-6 justify-center">
+          <div className="flex flex-col sm:flex-row gap-6 justify-center items-center">
             <a 
               href="mailto:hello@saardhak.com" 
-              className="inline-flex items-center bg-background dark:bg-neutral-800 text-foreground dark:text-white px-8 py-4 rounded-full text-lg font-medium button-hover hover:bg-background dark:hover:bg-neutral-700 hover:text-foreground dark:hover:text-white"
+              className="inline-flex items-center bg-primary text-white px-8 py-4 rounded-full text-lg font-medium button-hover hover:bg-primary/90 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 transition"
             >
               <Mail className="w-5 h-5 mr-3" />
               Email Me
             </a>
-            
             <a 
               href="https://linkedin.com/in/saardhak" 
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center border border-white text-white px-8 py-4 rounded-full text-lg font-medium button-hover hover:bg-white hover:text-apple-text"
+              className="inline-flex items-center bg-white text-primary border border-primary px-8 py-4 rounded-full text-lg font-medium button-hover hover:bg-primary hover:text-white focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 transition"
+              style={{ boxShadow: '0 2px 8px rgba(0,0,0,0.04)' }}
             >
               <Linkedin className="w-5 h-5 mr-3" />
               LinkedIn
