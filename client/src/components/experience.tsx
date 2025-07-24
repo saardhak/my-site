@@ -38,7 +38,7 @@ const Experience = () => {
   ];
 
   return (
-    <section ref={sectionRef} id="experience" className="py-32 px-6 bg-background dark:bg-neutral-900 section-transition">
+    <section ref={sectionRef} id="experience" className="py-16 sm:py-32 px-4 sm:px-6 bg-background dark:bg-neutral-900 section-transition">
       <div className="max-w-6xl mx-auto">
         <div className="text-center mb-20">
           <div ref={titleRef} className="reveal">

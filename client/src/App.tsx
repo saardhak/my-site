@@ -78,7 +78,7 @@ function App() {
       <TooltipProvider>
         <Toaster />
         {showDashboard && <SecretDashboard onBack={handleBackFromDashboard} darkMode={darkMode} onToggleDarkMode={handleToggleDarkMode} showBanner={showBanner} ballTheme={ballTheme} onThemeChange={setBallTheme} />}
-        <Home onFlipChange={setIsBhrugubanda} ballTheme={ballTheme} />
+        <Home onFlipChange={setIsBhrugubanda} ballTheme={ballTheme} darkMode={darkMode} onToggleDarkMode={handleToggleDarkMode} />
       </TooltipProvider>
     </QueryClientProvider>
   );

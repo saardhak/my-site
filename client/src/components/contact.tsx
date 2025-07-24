@@ -9,7 +9,7 @@ const Contact = () => {
   const ctaRef = useScrollAnimation();
 
   return (
-    <section ref={sectionRef} id="contact" className="py-32 px-6 bg-background dark:bg-neutral-900 text-foreground dark:text-white section-transition">
+    <section ref={sectionRef} id="contact" className="py-16 sm:py-32 px-4 sm:px-6 bg-background dark:bg-neutral-900 text-foreground dark:text-white section-transition">
       <div className="max-w-4xl mx-auto text-center">
         <div ref={titleRef} className="reveal">
           <h2 className="text-5xl md:text-6xl font-extralight mb-8 leading-tight">

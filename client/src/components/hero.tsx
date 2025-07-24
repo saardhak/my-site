@@ -79,7 +79,15 @@ const BALL_THEMES: Record<string, (string | {emoji: string, color: string})[]> =
   ],
 };
 
-const Hero = ({ children, onFlipChange, ballTheme }: { children?: React.ReactNode; onFlipChange?: (flipped: boolean) => void; ballTheme?: string }) => {
+interface HeroProps {
+  children?: React.ReactNode;
+  onFlipChange?: (flipped: boolean) => void;
+  ballTheme?: string;
+  darkMode?: boolean;
+  onToggleDarkMode?: () => void;
+}
+
+const Hero = ({ children, onFlipChange, ballTheme, darkMode, onToggleDarkMode }: HeroProps) => {
   const [scrollY, setScrollY] = useState(0);
   const [isVisible, setIsVisible] = useState(true);
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -101,7 +109,7 @@ const Hero = ({ children, onFlipChange, ballTheme }: { children?: React.ReactNod
   const words = ['Designer', 'Ideator', 'Entrepreneur', 'Innovator', 'Engineer'];
   const typingSpeed = 120;
   const deletingSpeed = 80;
-  const pauseTime = 1500;
+  const pauseTime = 500;
 
   useEffect(() => {
     let timeout: any;
@@ -533,7 +541,7 @@ const Hero = ({ children, onFlipChange, ballTheme }: { children?: React.ReactNod
             }}
           />
           {/* Saardhak and subtitle centered in visible hero area, scale with hero visibility */}
-          <div className="max-w-4xl mx-auto text-center relative z-20 flex flex-col items-center justify-center min-h-screen">
+          <div className="max-w-4xl sm:max-w-2xl mx-auto text-center relative z-20 flex flex-col items-center justify-center min-h-screen">
             <div
               ref={blockRef}
               style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', position: 'fixed', zIndex: 30 }}
@@ -587,13 +595,38 @@ const Hero = ({ children, onFlipChange, ballTheme }: { children?: React.ReactNod
               >
                 {/* Synchronized subtitle */}
                 <span className="relative">
-                  {currentText}
+                  {currentText.trim()}
                   {cursor && <span className="animate-pulse">|</span>}
                 </span>
               </div>
         </div>
       </div>
           {children}
+          <div style={{ position: 'absolute', top: 24, left: 24, zIndex: 50 }}>
+            <button
+              aria-label={darkMode ? 'Switch to light mode' : 'Switch to dark mode'}
+              onClick={onToggleDarkMode}
+              style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 0, outline: 'none' }}
+            >
+              {darkMode ? (
+                // Moon SVG
+                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3a7 7 0 0 0 9.79 9.79z" /></svg>
+              ) : (
+                // Improved Sun SVG
+                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <circle cx="12" cy="12" r="5" />
+                  <line x1="12" y1="1" x2="12" y2="3" />
+                  <line x1="12" y1="21" x2="12" y2="23" />
+                  <line x1="4.22" y1="4.22" x2="5.64" y2="5.64" />
+                  <line x1="18.36" y1="18.36" x2="19.78" y2="19.78" />
+                  <line x1="1" y1="12" x2="3" y2="12" />
+                  <line x1="21" y1="12" x2="23" y2="12" />
+                  <line x1="4.22" y1="19.78" x2="5.64" y2="18.36" />
+                  <line x1="18.36" y1="5.64" x2="19.78" y2="4.22" />
+                </svg>
+              )}
+            </button>
+          </div>
     </section>
       </SubtitleContext.Provider>
     </FlipContext.Provider>

@@ -1,6 +1,6 @@
 import { useScrollAnimation } from '@/hooks/use-scroll-animation';
 import { useSectionAnimation } from '@/hooks/use-section-animation';
-import { useState } from 'react';
+import { useState, useRef, useEffect } from 'react';
 
 const Portfolio = () => {
   const sectionRef = useSectionAnimation();
@@ -72,12 +72,90 @@ const Portfolio = () => {
         { label: 'JHU News', url: 'https://ventures.jhu.edu/news/student-engineers-polair-xprize-adaptable-surgical-mask/' },
       ],
     },
+    {
+      title: 'OcuSpeak',
+      company: 'Clinical Diagnostics and Devices',
+      logo: '/logos/ocuspeak.png',
+      role: 'Team Member',
+      location: 'Baltimore, MD',
+      period: 'Jan 2024 – May 2024',
+      description: 'An LLM-powered eye-tracking device to enhance communication for patients with ALS.',
+      skills: ['LLM', 'Eye Tracking', 'Assistive Technology', 'Medical Devices', 'Communication'],
+    },
+    {
+      title: 'Bobble',
+      company: 'Biomedical Instrumentation and Design',
+      logo: '/logos/bobble.png',
+      role: 'Team Member',
+      location: 'Baltimore, MD',
+      period: 'Jun 2024 – Dec 2023',
+      description: 'A bio-gaming headset for patients with quadriplegia allowing for mouse and key control using head movement.',
+      skills: ['Head Tracking', 'Assistive Technology', 'Gaming', 'Biomedical Instrumentation'],
+    },
+    {
+      title: 'FLIMPY',
+      company: 'Computer Integrated Surgery',
+      logo: '/logos/flimpy.png',
+      role: 'Team Member',
+      location: 'Baltimore, MD',
+      period: 'Jan 2024 – May 2024',
+      description: 'A 5-DOF Surgical Robotic System for MRI-compatible Lumbar Injection.',
+      skills: ['Robotics', 'Surgery', 'MRI Compatibility', 'Medical Devices'],
+    },
   ];
 
   const [flipped, setFlipped] = useState(Array(projects.length).fill(false));
+  const [flipCounts, setFlipCounts] = useState(Array(projects.length).fill(0));
+  const [autoFlipActive, setAutoFlipActive] = useState(true);
+  const [lastAutoFlipped, setLastAutoFlipped] = useState<number | null>(null);
+  const flipIntervalRef = useRef<NodeJS.Timeout | null>(null);
+  const flipBackTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
-  const handleFlip = (idx: number) => {
+  useEffect(() => {
+    if (!autoFlipActive) return;
+    function flipRandomCard() {
+      setFlipped((prev) => {
+        // Flip all cards back first
+        const reset = prev.map(() => false);
+        // Pick a random card, not the same as lastAutoFlipped
+        let idx = Math.floor(Math.random() * projects.length);
+        if (lastAutoFlipped !== null && projects.length > 1) {
+          while (idx === lastAutoFlipped) {
+            idx = Math.floor(Math.random() * projects.length);
+          }
+        }
+        reset[idx] = true;
+        setLastAutoFlipped(idx);
+        return reset;
+      });
+      setFlipCounts((prev) => prev.map((c, i) => (i === 0 ? c + 1 : c)));
+      // Flip back after 2.5s
+      if (flipBackTimeoutRef.current) clearTimeout(flipBackTimeoutRef.current);
+      flipBackTimeoutRef.current = setTimeout(() => {
+        setFlipped((prev) => prev.map(() => false));
+      }, 2500);
+    }
+    flipRandomCard(); // Initial flip
+    flipIntervalRef.current = setInterval(flipRandomCard, 5000);
+    return () => {
+      if (flipIntervalRef.current) clearInterval(flipIntervalRef.current);
+      if (flipBackTimeoutRef.current) clearTimeout(flipBackTimeoutRef.current);
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [projects.length, autoFlipActive]);
+
+  // Manual flip handler
+  const handleManualFlip = (idx: number) => {
+    setAutoFlipActive(false); // Stop auto-flip after first manual interaction
     setFlipped((prev) => prev.map((f, i) => (i === idx ? !f : f)));
+    setFlipCounts((prev) => prev.map((c, i) => (i === idx ? c + 1 : c)));
+    if (flipBackTimeoutRef.current) clearTimeout(flipBackTimeoutRef.current);
+    if (!flipped[idx]) {
+      // If flipping to back, auto-flip back after 30s
+      flipBackTimeoutRef.current = setTimeout(() => {
+        setFlipped((prev) => prev.map((f, i) => (i === idx ? false : f)));
+      }, 30000);
+    }
   };
 
   return (
@@ -99,25 +177,24 @@ const Portfolio = () => {
           {projects.map((project, idx) => (
             <div
               key={idx}
-              className="relative group perspective"
+              className="relative group perspective max-w-xs w-full mx-auto"
               style={{ minHeight: 320 }}
-              onClick={() => handleFlip(idx)}
+              onClick={() => handleManualFlip(idx)}
             >
-              <div className={`transition-transform duration-700 transform-style-preserve-3d ${flipped[idx] ? 'rotate-y-180' : ''}`}
+              <div
+                className={`transition-transform duration-700 transform-style-preserve-3d ${flipped[idx] ? 'rotate-y-180' : ''}`}
                 style={{ minHeight: 320 }}
               >
-                {/* Front */}
-                <div className="absolute w-full h-full backface-hidden bg-white dark:bg-neutral-800 rounded-2xl shadow-lg flex flex-col items-center justify-center p-6 cursor-pointer border border-gray-200 dark:border-gray-700">
+                {/* Front: logo, name, role */}
+                <div className="absolute w-full h-full backface-hidden bg-white dark:bg-neutral-800 rounded-2xl shadow-lg flex flex-col items-center justify-center p-6 border border-gray-200 dark:border-gray-700">
                   {project.logo && <img src={project.logo} alt={project.company + ' logo'} className="h-16 mb-4" />}
                   <h3 className="text-xl font-semibold text-apple-text mb-2 text-center">{project.title}</h3>
                   <div className="text-apple-gray text-center text-sm mb-1">{project.company}</div>
-                  <div className="text-xs text-gray-400 mb-2">{project.period}</div>
-                  <div className="text-xs text-gray-400 mb-2">{project.location}</div>
-                  <div className="mt-2 text-xs text-primary font-medium">Click to flip</div>
+                  <div className="text-apple-gray text-center text-sm mb-1">{project.role}</div>
                 </div>
-                {/* Back */}
-                <div className="absolute w-full h-full backface-hidden bg-background dark:bg-neutral-900 rounded-2xl shadow-lg flex flex-col items-center justify-center p-6 rotate-y-180 cursor-pointer border border-gray-200 dark:border-gray-700">
-                  <div className="text-apple-text text-base font-semibold mb-2 text-center">{project.role}</div>
+                {/* Back: date, description, skills */}
+                <div className="absolute w-full h-full backface-hidden bg-background dark:bg-neutral-900 rounded-2xl shadow-lg flex flex-col items-center justify-center p-6 rotate-y-180 border border-gray-200 dark:border-gray-700">
+                  <div className="text-xs text-gray-400 mb-2">{project.period}</div>
                   <div className="text-apple-gray text-sm mb-3 text-center">{project.description}</div>
                   <div className="flex flex-wrap gap-2 justify-center mb-2">
                     {project.skills.map((skill, i) => (
@@ -131,7 +208,6 @@ const Portfolio = () => {
                       ))}
                     </div>
                   )}
-                  <div className="mt-2 text-xs text-primary font-medium">Click to flip back</div>
                 </div>
               </div>
             </div>

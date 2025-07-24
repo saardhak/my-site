@@ -33,7 +33,7 @@ const VeinaProject = () => {
             <img 
               src={logo} 
               alt="Veina Logo" 
-              className="rounded-2xl shadow-lg w-80 h-80 object-contain mb-6 bg-white p-4"
+              className="rounded-2xl shadow-lg w-full max-w-xs sm:w-80 sm:h-80 object-contain mb-6 bg-white p-4"
             />
             <a href="https://veinavascular.github.io" target="_blank" rel="noopener noreferrer" className="text-primary underline text-lg mt-2">Visit Veina Website</a>
           </div>

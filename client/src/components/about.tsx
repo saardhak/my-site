@@ -10,7 +10,7 @@ const About = () => {
   const imageRef = useScrollAnimation();
 
   return (
-    <section ref={sectionRef} id="about" className="py-32 px-6 section-transition">
+    <section ref={sectionRef} id="about" className="py-16 sm:py-32 px-4 sm:px-6 section-transition">
       <div className="max-w-6xl mx-auto">
         <div className="grid md:grid-cols-2 gap-16 items-center">
           <div>
