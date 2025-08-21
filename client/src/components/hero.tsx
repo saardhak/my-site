@@ -385,7 +385,7 @@ const Hero = ({ children, onFlipChange, ballTheme, darkMode, onToggleDarkMode }:
 
   // --- SCALE WITH HERO VISIBILITY LOGIC (RAF, no lag, no forced re-render) ---
   const minFont = 32; // Nav bar size
-  const maxFont = 200; // Grow larger
+  const maxFont = window.innerWidth < 768 ? 120 : 200; // Smaller max font on mobile
   const minSubtitleFont = 18; // Nav bar subtitle size
   const maxSubtitleFont = 48; // px
 

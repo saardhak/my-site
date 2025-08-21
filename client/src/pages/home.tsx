@@ -3,6 +3,7 @@ import Hero, { FlipContext } from '@/components/hero';
 import About from '@/components/about';
 import VeinaProject from '@/components/veina-project';
 import PastProjects from '@/components/past-projects';
+import Reflections from '@/components/reflections';
 import Contact from '@/components/contact';
 import React, { useState } from 'react';
 
@@ -22,6 +23,7 @@ const Home = ({ onFlipChange, ballTheme, darkMode, onToggleDarkMode }: { onFlipC
       <About />
       <VeinaProject />
       <PastProjects />
+      <Reflections />
       <Contact />
       {/* Footer */}
       <footer className="py-8 px-6 border-t border-gray-200 dark:border-gray-700">

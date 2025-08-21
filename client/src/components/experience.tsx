@@ -62,14 +62,14 @@ const Experience = () => {
               ref={index === 0 ? exp1Ref : index === 1 ? exp2Ref : exp3Ref}
               className="reveal"
             >
-              <div className="bg-background dark:bg-neutral-800 rounded-3xl p-8 md:p-12 shadow-lg hover:shadow-xl transition-all duration-500 button-hover text-foreground dark:text-white">
+              <div className="bg-background dark:bg-neutral-800 rounded-3xl p-8 md:p-12 shadow-lg hover:shadow-xl transition-all duration-500 button-hover text-foreground dark:text-white hover-lift hover-glow">
                 <div className="grid md:grid-cols-3 gap-8">
                   <div className="md:col-span-1">
                     <h3 className="text-2xl font-medium text-apple-text mb-4">{exp.title}</h3>
                     <div className="space-y-2 text-apple-gray">
                       <div className="flex items-center">
                         <Building className="w-4 h-4 mr-2" />
-                        <span className="font-medium">{exp.company}</span>
+                        <span className="font-medium text-gradient-primary">{exp.company}</span>
                       </div>
                       <div className="flex items-center">
                         <MapPin className="w-4 h-4 mr-2" />
@@ -91,7 +91,7 @@ const Experience = () => {
                       <ul className="space-y-2">
                         {exp.highlights.map((highlight, idx) => (
                           <li key={idx} className="flex items-start">
-                            <div className="w-2 h-2 rounded-full bg-primary mt-2 mr-3 flex-shrink-0"></div>
+                            <div className="w-2 h-2 rounded-full bg-gradient-primary mt-2 mr-3 flex-shrink-0"></div>
                             <span className="text-apple-gray">{highlight}</span>
                           </li>
                         ))}

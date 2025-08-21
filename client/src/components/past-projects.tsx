@@ -1,6 +1,7 @@
 import { useScrollAnimation } from '@/hooks/use-scroll-animation';
 import { useSectionAnimation } from '@/hooks/use-section-animation';
 import { useState, useRef, useEffect } from 'react';
+import StetPulseLogo from './stetpulse-logo';
 
 const Portfolio = () => {
   const sectionRef = useSectionAnimation();
@@ -51,7 +52,7 @@ const Portfolio = () => {
     {
       title: 'Co-Founder, Technical Lead',
       company: 'StetPulse LLC',
-      logo: '/logos/stetpulse.png',
+      logo: 'stetpulse', // Special identifier for the custom logo component
       role: 'Co-Founder, Technical Lead',
       location: 'Baltimore, MD, USA',
       period: 'Nov 2020 - May 2022',
@@ -187,7 +188,13 @@ const Portfolio = () => {
               >
                 {/* Front: logo, name, role */}
                 <div className="absolute w-full h-full backface-hidden bg-white dark:bg-neutral-800 rounded-2xl shadow-lg flex flex-col items-center justify-center p-6 border border-gray-200 dark:border-gray-700">
-                  {project.logo && <img src={project.logo} alt={project.company + ' logo'} className="h-16 mb-4" />}
+                  {project.logo === "stetpulse" ? (
+                    <div className="mb-4">
+                      <StetPulseLogo size="small" />
+                    </div>
+                  ) : project.logo ? (
+                    <img src={project.logo} alt={project.company + ' logo'} className="h-16 mb-4" />
+                  ) : null}
                   <h3 className="text-xl font-semibold text-apple-text mb-2 text-center">{project.title}</h3>
                   <div className="text-apple-gray text-center text-sm mb-1">{project.company}</div>
                   <div className="text-apple-gray text-center text-sm mb-1">{project.role}</div>
@@ -198,13 +205,13 @@ const Portfolio = () => {
                   <div className="text-apple-gray text-sm mb-3 text-center">{project.description}</div>
                   <div className="flex flex-wrap gap-2 justify-center mb-2">
                     {project.skills.map((skill, i) => (
-                      <span key={i} className="px-2 py-1 bg-background dark:bg-neutral-800 rounded text-xs text-foreground dark:text-white border border-gray-200 dark:border-gray-700">{skill}</span>
+                      <span key={i} className="px-2 py-1 bg-gradient-primary text-white rounded text-xs font-medium border-0">{skill}</span>
                     ))}
                   </div>
                   {project.links && project.links.length > 0 && (
                     <div className="flex flex-col gap-1 mt-2">
                       {project.links.map((link, i) => (
-                        <a key={i} href={link.url} target="_blank" rel="noopener noreferrer" className="text-primary underline text-xs">{link.label}</a>
+                        <a key={i} href={link.url} target="_blank" rel="noopener noreferrer" className="text-gradient-primary underline text-xs font-medium">{link.label}</a>
                       ))}
                     </div>
                   )}

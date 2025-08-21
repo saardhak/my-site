@@ -7,7 +7,7 @@ const NAV_SECTIONS = [
   { label: 'About Me', id: 'about' },
   { label: 'My Startup', id: 'startup' },
   { label: 'Portfolio', id: 'portfolio' },
-  { label: `Let's Connect`, id: 'contact' },
+  { label: 'Reflections', id: 'reflections' },
 ];
 
 // Track if hero text is pinned (cut off or fully hidden)
@@ -104,8 +104,8 @@ const Navigation = () => {
         className={`w-full max-w-6xl mx-auto px-6 py-4 apple-blur border-b border-gray-100 dark:border-gray-700 transition-all duration-300`}
       >
         <div className="flex items-center justify-center w-full">
-          {/* Left nav: first two sections */}
-          <div className="flex space-x-8 flex-1 justify-end">
+          {/* Left nav: first two sections - hidden on mobile */}
+          <div className="hidden md:flex space-x-8 flex-1 justify-end">
             {NAV_SECTIONS.slice(0, 2).map((item) => (
               <button
                 key={item.id}
@@ -136,8 +136,8 @@ const Navigation = () => {
               </span>
             </span>
           </div>
-          {/* Right nav: last two sections */}
-          <div className="flex space-x-8 flex-1 justify-start">
+          {/* Right nav: last two sections - hidden on mobile */}
+          <div className="hidden md:flex space-x-8 flex-1 justify-start">
             {NAV_SECTIONS.slice(2).map((item) => (
               <button
                 key={item.id}
@@ -149,8 +149,17 @@ const Navigation = () => {
             ))}
           </div>
         </div>
+        {/* Let's Connect button - top right, vertically centered with navigation tabs */}
+        <div className="absolute top-1/2 right-6 transform -translate-y-1/2">
+          <button
+            onClick={() => scrollToSection('contact')}
+            className="bg-gradient-primary text-white px-4 py-2 rounded-full font-medium transition-all duration-300 hover:scale-105 hover:shadow-lg transform hover:-translate-y-1 hover-fill-up"
+          >
+            Let's Connect
+          </button>
+        </div>
         {/* Mobile Menu Button */}
-        <div className="flex md:hidden justify-end items-center">
+        <div className="flex md:hidden justify-end items-center absolute right-6 top-1/2 transform -translate-y-1/2">
           <button
             className="md:hidden text-apple-text button-hover"
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
